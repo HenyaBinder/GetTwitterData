@@ -3,8 +3,6 @@ import mysql.connector as mc
 from datetime import datetime, timezone
 import logHandler
 import gsheetsHandler as gs
-# import module sys to get the type of exception
-import sys
 
 #===========================connector to mysql====================================#
 class mySqlHandle():
@@ -114,11 +112,11 @@ class mySqlHandle():
             # print(sql)
             self.mysql_conn.commit()
             mysql_cursor.execute(sql)
-            records = mysql_cursor.fetchall()  # new
+            records = mysql_cursor.fetchall() 
             mysql_cursor.close()
             # self.closeConnection()
             pass
-            return records  # new
+            return records  
         except Exception as e:
             err = str(e)
             logger = logHandler.myLogger("mySQL", "select tweets")
@@ -195,7 +193,7 @@ class mySqlHandle():
             self.closeConnection()
 
     def deleteDataInLogTbl(self, condition):
-        logger = log.myLogger("logHandler", "deleteDataInLogTbl")
+        logger = log.myLogger("connectToMySQL", "deleteDataInLogTbl")
 
         deleteStatement = """
             delete from logTbl
@@ -215,7 +213,3 @@ class mySqlHandle():
         self.mysql_conn.close()
 
 
-# # check
-# mySql = mySqlHandle()
-# r = mySql.selectDataInTweetReportsTbl('')
-# print(r)
