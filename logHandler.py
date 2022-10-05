@@ -129,9 +129,8 @@ class myLogger:
     ##
     def cleanLogTable(self, days):
 
-        if days < 0:
-            return
+        num_of_days = p.getNumberOfDays(c.cleanLogTable, days)
 
         db = mySQLDB.mySqlHandle()
-        db.deleteDataInLogTbl("date(logDate) <= date_sub(curdate(), interval {} day)".format(days))
+        db.deleteDataInLogTbl("date(logDate) <= date_sub(curdate(), interval {} day)".format(num_of_days))
         db.closeConnection()
