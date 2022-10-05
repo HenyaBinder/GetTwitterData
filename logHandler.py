@@ -1,5 +1,6 @@
 import connectToMySQL as mySQLDB
 import parameterHandler as p
+import configuration as c
 
 
 ############################################
