@@ -70,10 +70,22 @@ def createTables():
                     );'''.format(c.mysql_database_name)
 
     mysql_create_tbl_parameters = '''create table if not exists {}.parametersTBL (
+                                        emailOperationType varchar (30),
                                         emailReports varchar (100),
-                                        emailOperationType varchar (30)
+                                        numOfDays integer
     );'''.format(c.mysql_database_name)
 
+    
+    mysql_insert_removedTweetsMail = """insert into parametersTBL(emailOperationType, emailReports, numOfDays)
+                                        values('{}', 'None', 7)""".format(c.removedTweetsMail);
+    mysql_insert_newTweetsMail = """insert into parametersTBL(emailOperationType, emailReports, numOfDays)
+                                    values('{}', 'None', 7)""".format(c.newTweetsMail);
+    mysql_insert_removedTweetsProcess = """insert into parametersTBL(emailOperationType, emailReports, numOfDays)
+                                           values('{}', 'None', 2)""".format(c.removedTweetsProcess);
+    mysql_clean_Log_Table = """insert into parametersTBL(cleanLogTable, emailReports, numOfDays)
+                                           values('{}', 'None', 30)""".format(c.cleanLogTable);
+
+    
     mysql_create_tbl_logs = """create table if not exists {}.{}
     (
     _id integer NOT NULL AUTO_INCREMENT,
@@ -83,10 +95,17 @@ def createTables():
     logLevel varchar(100) not null,
     logMessage varchar(4000)  not null,
     CONSTRAINT log_pk PRIMARY  KEY(_id) );""".format(c.mysql_database_name,c.mysql_log_table)
+    
+    
     mysql_cursor_tbl.execute(mysql_create_tbl_tweet_reports)
     mysql_cursor_tbl.execute(mysql_create_tbl_reports)
     mysql_cursor_tbl.execute(mysql_create_tbl_parameters)
     mysql_cursor_tbl.execute(mysql_create_tbl_logs)
+
+    mysql_cursor_tbl.execute(mysql_insert_removedTweetsMail)
+    mysql_cursor_tbl.execute(mysql_insert_newTweetsMail)
+    mysql_cursor_tbl.execute(mysql_insert_removedTweetsProcess)
+    mysql_cursor_tbl.execute(mysql_clean_Log_Table)
 
     mysql_cursor_tbl.close()
 
