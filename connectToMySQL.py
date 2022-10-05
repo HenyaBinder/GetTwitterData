@@ -1,7 +1,7 @@
 import configuration as c
 import mysql.connector as mc
 from datetime import datetime, timezone
-import logHandler
+import logHandler as log
 import gsheetsHandler as gs
 
 #===========================connector to mysql====================================#
@@ -37,7 +37,7 @@ class mySqlHandle():
             self.closeConnection()
         except Exception as e:
             err = str(e)
-            logger = logHandler.myLogger("mySQL", "save tweets")
+            logger = log.myLogger("mySQL", "save tweets")
             logger.logError('error:connectToMySQL.insertDataToTweetReportsTblSpark ' + err[0:1000].replace("\"", '\''))
             self.closeConnection()
 
@@ -77,7 +77,7 @@ class mySqlHandle():
 
         except Exception as e:
             err = str(e)
-            logger = logHandler.myLogger("mySQL", "insert tweets")
+            logger = log.myLogger("mySQL", "insert tweets")
             logger.logError('error:connectToMySQL.insertDataToTweetReportsTbl: ' + err[0:1000].replace("\"", '\''))
             self.closeConnection()
 
@@ -96,7 +96,7 @@ class mySqlHandle():
             pass
         except Exception as e:
             err = str(e)
-            logger = logHandler.myLogger("mySQL", "delete tweets")
+            logger = log.myLogger("mySQL", "delete tweets")
             logger.logError('error:connectToMySQL.deleteDataInTweetReportsTbl: ' + err[0:1000].replace("\"", '\''))
             self.closeConnection()
 
@@ -119,7 +119,7 @@ class mySqlHandle():
             return records  
         except Exception as e:
             err = str(e)
-            logger = logHandler.myLogger("mySQL", "select tweets")
+            logger = log.myLogger("mySQL", "select tweets")
             logger.logError('error:connectToMySQL.selectDataInTweetReportsTbl: ' + err[0:1000].replace("\"", '\''))
             self.closeConnection()
 
@@ -160,7 +160,7 @@ class mySqlHandle():
             pass
         except Exception as e:
             err = str(e)
-            logger = logHandler.myLogger("mySQL", "update tweets")
+            logger = log.myLogger("mySQL", "update tweets")
             logger.logError('error:connectToMySQL.updateDataInTweetReportsTbl: ' + err[0:1000].replace("\"", '\''))
             self.closeConnection()
 
@@ -188,8 +188,8 @@ class mySqlHandle():
             # self.closeConnection()
         except Exception as e:
             err = str(e)
-            logger = logHandler.myLogger("mySQL", "insert log")
-            logger.logError('error:connectToMySQL.insertDataToLogTbl: ' + err[0:1000].replace("\"", '\''))
+            logger = log.myLogger("mySQL", "insert log")
+            logger.log('error:connectToMySQL.insertDataToLogTbl: ' + err[0:1000].replace("\"", '\''))
             self.closeConnection()
 
     def deleteDataInLogTbl(self, condition):
