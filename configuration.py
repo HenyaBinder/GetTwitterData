@@ -8,8 +8,15 @@ mysql_port = 3306
 mysql_database_name = 'AntisemitismDB'
 mysql_username = 'naya'
 mysql_password = '******'
+
 mysql_table_name = 'twitterReportsTbl'
 mysql_log_table = 'logTbl'
+mysql_parameters_table = 'parametersTBL'
+
+removedTweetsMail = "removedTweetsMail"
+newTweetsMail = "newTweetsMail"
+removedTweetsProcess = "removedTweetsProcess"
+cleanLogTable = "cleanLogTable"
 
 ###########################################
 ###           Twitter                   ###
@@ -51,8 +58,8 @@ hive_location = '/user/naya/finalProject'
 ###            Google Sheets  + gcp     ###
 ###########################################
 # Goggle Sheets Keys
-local_path = "/home/naya/finalProject"
-gsheets_keys = "/home/naya/finalProject/googleSheetkeys.json"
+local_path = "/****/****/************"
+gsheets_keys = "/****/****/************/**************.json"
 
 # Google Sheets Files - All files are in Google Drive
 gsheets_path = "https://docs.google.com/spreadsheets"
@@ -67,8 +74,8 @@ ws_en_combinations = "Word Combinations English"
 
 ws_posts = "Posts"
 
-
 bucket_name = 'final-project-bucket-foa'
+
 ###############################################
 ### Google Sheets - Reports sheet Structure ###
 ###############################################
