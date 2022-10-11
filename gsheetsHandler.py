@@ -1,3 +1,5 @@
+import datetime
+
 import pygsheets as gc
 import mysql.connector as mc
 
@@ -7,7 +9,7 @@ import logHandler as log
 
 
 #########################################################
-###     to handle pygsheets API related functions     ###
+###       Handle pygsheets API related functions      ###
 #########################################################
 
 ##
@@ -38,7 +40,7 @@ def connectByName(spredsheet, workbook):
 ##      n - row number
 ##
 def getSingleRow(wks, n):
-    return wks.get_row(n, include_tailing_empty=True)
+    return wks.get_row(n, include_tailing_empty=False)
 
 
 ##
@@ -183,11 +185,15 @@ def getAllKeywords():
 ##      tweetID - Tweet ID to update
 ##
 def markRemovedTweets(wks, tweetID):
+    logger = log.myLogger("gsheetsHandler", "copyTweetMySQLToSheets")
     row_no = getTweetRowNo(wks, tweetID)
 
     if row_no > 0:
         cell_no = c.gs_removed[1] + str(row_no)
         wks.update_value(cell_no, "Removed")
+    else:
+        logger.logInfo("tweetID {} was not found in google sheets".format(tweetID))
+
 
 
 ##
@@ -198,52 +204,63 @@ def markRemovedTweets(wks, tweetID):
 ## Input parameter:
 ##      tweetID - Tweet ID to update
 ##
-def categoryUpdate(wks, update_date):
+def categoryUpdate(wks, from_date, to_date):
+    logger = log.myLogger("gsheetsHandler", "copyTweetMySQLToSheets")
+
     db = mySQLDB.mySqlHandle()
 
-    date_str = update_date.strftime("%d-%m-%Y")
+    delta = datetime.timedelta(days=1)
+    query_date = from_date
 
-    cells = wks.find(pattern=date_str, matchEntireCell=True, cols=[c.gs_date[0], c.gs_date[0]])
+    while (query_date <= to_date):
+        date_str = query_date.strftime("%d-%m-%Y")
 
-    if (len(cells) > 0):
+        cells = wks.find(pattern=date_str, matchEntireCell=True, cols=[c.gs_date[0], c.gs_date[0]])
 
-        for cell in cells:
-            tweetID = wks.get_value(c.gs_tweet_id[1] + str(cell.row))
-            category = wks.get_value(c.gs_category[1] + str(cell.row))
+        if (len(cells) > 0):
 
-            results = db.selectDataInTweetReportsTbl("tweetID={}".format(tweetID))
+            for cell in cells:
+                tweetID = wks.get_value(c.gs_tweet_id[1] + str(cell.row))
+                category = wks.get_value(c.gs_category[1] + str(cell.row))
 
-            if (results is None or len(results) == 0) :
-                continue;
-            data = list(results[0])
+                results = db.selectDataInTweetReportsTbl("tweetID={}".format(tweetID))
 
-            if (data[2] != category):
+                # if (len(results) == 0):
+                #     print("tweetID {} was not found in twitterReportsTbl tavle".format(tweetID))
+                #     logger.logError("tweetID {} was not found in twitterReportsTbl tavle".format(tweetID))
+                #     return
 
-                if (data[8] == 'Y'):
-                    isReported = 'Y'
-                else:
-                    isReported = 'N'
+                if (len(results) > 0):
+                    data = list(results[0])
 
-                dict = {"_id": data[0],
-                        "reportingDate": "date_format('{}','%Y-%m-%d %T')".format(data[1]),
-                        "categoryType": category,
-                        "platform": data[3],
-                        "language": data[4],
-                        "language2": data[5],
-                        "ContentLink": data[7],
-                        "logiReported": isReported,
-                        "logiRemoved": data[9],
-                        "screenshotLink": data[10],
-                        "Brief": data[11],
-                        "countryPublished": data[12],
-                        "isThreat": data[13],
-                        "keywordsOrHashtags": data[14],
-                        "updatedVolName": data[15],
-                        "Vol_Email": data[16],
-                        }
+                    if (data[2] != category):
 
-                db.updateDataInTweetReportsTbl(dict)
-                print('{} rows affected '.format(len(dict)))
+                        if (data[8] == 'Y'):
+                            isReported = 'Y'
+                        else:
+                            isReported = 'N'
+
+                        dict = {"_id": data[0],
+                                "reportingDate": "date_format('{}','%Y-%m-%d %T')".format(data[1]),
+                                "categoryType": category,
+                                "platform": data[3],
+                                "language": data[4],
+                                "language2": data[5],
+                                "ContentLink": data[7],
+                                "logiReported": isReported,
+                                "logiRemoved": data[9],
+                                "screenshotLink": data[10],
+                                "Brief": data[11],
+                                "countryPublished": data[12],
+                                "isThreat": data[13],
+                                "keywordsOrHashtags": data[14],
+                                "updatedVolName": data[15],
+                                "Vol_Email": data[16]
+                                }
+
+                        db.updateDataInTweetReportsTbl(dict)
+
+        query_date += delta
 
     db.closeConnection()
 
@@ -260,7 +277,6 @@ def categoryUpdate(wks, update_date):
 def copyTweetMySQLToSheets(wks, tweetID):
     logger = log.myLogger("gsheetsHandler", "copyTweetMySQLToSheets")
 
-    print("Type: ", type(tweetID))
     try:
         db = mySQLDB.mySqlHandle()
 
@@ -275,6 +291,7 @@ def copyTweetMySQLToSheets(wks, tweetID):
         return
 
     sheet_row = []
+
     sheet_row.append(str(data[6]))  # Tweet_ID
     sheet_row.append(data[2])  # Category
 
@@ -285,8 +302,8 @@ def copyTweetMySQLToSheets(wks, tweetID):
 
     sheet_row.append(None)  # Removed 1
     sheet_row.append(data[1].strftime("%d-%m-%Y"))  # Date
-    sheet_row.append(data[15]) # First name
-    sheet_row.append(None) # Last name
+    sheet_row.append(data[15])  # First name
+    sheet_row.append(None)  # Last name
     sheet_row.append(data[3])  # Platform
     sheet_row.append(data[4])  # Langauge
     sheet_row.append(data[7])  # Content Link
@@ -306,6 +323,7 @@ def copyTweetMySQLToSheets(wks, tweetID):
         wks.insert_rows(row=last_row, values=sheet_row)
     else:
         wks.update_row(row_no, sheet_row)
+
 
 ##
 ## Function Name: copyTweetSheetsToMySQL
@@ -331,38 +349,40 @@ def copyTweetSheetsToMySQL(wks, tweetID):
             if (len(results) == 0):
 
                 if (row[c.gs_removed[0]] == "Removed"):
-                    removed = "Y"
+                    tweetRemoved = "Y"
                 else:
-                    removed = "N"
+                    tweetRemoved = "N"
 
-            full_name = "{} {}".format(row[c.gs_first_name[2]], row[c.gs_last_name[2]])
 
-            dict = {"reportingDate": "str_to_date('{}','%Y-%m-%d %T')".format(row[c.gs_date[2]]),
-                    "categoryType": row[c.gs_category[2]],
-                    "platform": row[c.gs_platform[2]],
-                    "language": row[c.gs_langauge[2]],
-                    "language2": row[c.gs_other_langauge[2]],
-                    "tweetID": int(row[c.gs_tweet_id[2]]),
-                    "ContentLink": row[c.gs_content_link[2]],
-                    "logiReported": row[c.gs_reported[2]],
-                    "logiRemoved": removed,
-                    "screenshotLink": row[c.gs_screenshot_link[2]],
-                    "Brief": row[c.gs_brief[2]],
-                    "countryPublished": row[c.gs_country_published[2]],
-                    "isThreat": row[c.gs_any_treat[2]],
-                    "keywordsOrHashtags": row[c.gs_keywords_or_hashtags[2]],
-                    "updatedVolName": full_name,
-                    "Vol_Email": row[c.gs_email_address[2]],
-                    "updatedVolDate": "str_to_date('{}','%Y-%m-%d %T')".format(row[c.gs_date[2]])
-                    }
+                full_name = "{} {}".format(row[c.gs_first_name[2]], row[c.gs_last_name[2]])
 
-            db.insertDataToTweetReportsTbl(dict)
-            db.closeConnection()
+                dict = {"reportingDate": "str_to_date('{}','%Y-%m-%d %T')".format(row[c.gs_date[2]]),
+                        "categoryType": row[c.gs_category[2]],
+                        "platform": row[c.gs_platform[2]],
+                        "language": row[c.gs_langauge[2]],
+                        "language2": row[c.gs_other_langauge[2]],
+                        "tweetID": int(row[c.gs_tweet_id[2]]),
+                        "ContentLink": row[c.gs_content_link[2]],
+                        "logiReported": row[c.gs_reported[2]],
+                        "logiRemoved": tweetRemoved,
+                        "screenshotLink": row[c.gs_screenshot_link[2]],
+                        "Brief": row[c.gs_brief[2]],
+                        "countryPublished": row[c.gs_country_published[2]],
+                        "isThreat": row[c.gs_any_treat[2]],
+                        "keywordsOrHashtags": row[c.gs_keywords_or_hashtags[2]],
+                        "updatedVolName": full_name,
+                        "updatedVolEmail": row[c.gs_email_address[2]],
+                        "updatedVolDate": "str_to_date('{}','%Y-%m-%d %T')".format(row[c.gs_date[2]])
+                        }
+
+                db.insertDataToTweetReportsTbl(dict)
+                db.closeConnection()
 
         except mc.Error as e:
             logger.logError("Error reading data from MySQL table", e)
-            print("Error reading data from MySQL table", e)
+            #print("Error reading data from MySQL table", e)
 
     else:
         logger.logDebug("Tweet {} does not exists in sheets".format(tweetID))
+        #print("Tweet {} does not exists in sheets".format(tweetID))()
 
