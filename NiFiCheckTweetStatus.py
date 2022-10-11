@@ -1,3 +1,21 @@
+##
+## NifiCheckTweetStatus.py
+##
+## The program is called from Nifi, DoesTweetDeleted (ExceuteStreamCommand Processor)
+## The program checks if the tweet was deleted
+##
+## parameters:
+##    1. Twitter's Customer key
+##    2. Twitter's Customer secret
+##    3. Twitter's Access Token
+##    4. Twitter's Access  secret
+##    5. Tweet ID
+##
+## Return values:
+##      Y - Tweet was deleted
+##      N - Tweet was not deleted
+
+
 import sys
 import tweepy as tw
 from tweepy import Stream
