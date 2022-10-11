@@ -1,3 +1,14 @@
+## The program is called from Nifi, UpdateGoogleSheets (ExceuteStreamCommand Processor)
+## The program update Google Sheets, when tweet is deleted
+##
+## parameters:
+##    1. path and nam of Google Sheets Keys file
+##    2. Google Sheets file name
+##    3. Workbook name
+##    4. Tweet ID
+##
+
+
 import sys
 import pygsheets as gc
 
