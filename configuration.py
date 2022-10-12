@@ -7,27 +7,21 @@ mysql_host = 'localhost'
 mysql_port = 3306
 mysql_database_name = 'AntisemitismDB'
 mysql_username = 'naya'
-mysql_password = 'NayaPass1!'
+mysql_password = '*****************'
 mysql_table_name = 'twitterReportsTbl'
 mysql_log_table = 'logTbl'
 
 ###########################################
 ###           Twitter                   ###
 ###########################################
-#
-# Tweepy API Keys
-# consumer_key = "v9cLEsBEICmobP2tGQIhCNeR6"
-# consumer_secret = "BUQ8IIxPdXtbLsfPzONF9E8N6dWE1svVKXFU2qz8WduomSF3Ey"
-# access_token = "1555849103803916288-SNczcHdB0seh3MkjrJh3GZABJrsjUb"
-# access_secret = "fjmgULRn2KtI74PPHcIRJiPJd17XkSVhEj7wTUaXICibY"
 
 
 
 
-consumer_key = '9Kul4QgCP4QE7ydJvFrQcLFa4'
-consumer_secret = 'ne0nWw4lmZFFhDgKcSEL9ZDtMISy6wRmfvkh8FciTRhvNPSgkz'
-access_token = '1153221248039755776-5UMImVxLCzTZilh8ASrYqFErjZ73tB'
-access_secret = 'pWhFC5Bfo2Lx6BLdh3i62vxieXxpppOWzNj4leB1jo4b1'
+consumer_key = '***********'
+consumer_secret = '************'
+access_token = '***************-5UMImVxLCzTZilh8ASrYqFErjZ73tB'
+access_secret = '*************************'
 
 ###########################################
 ###            kafka connect            ###
@@ -53,7 +47,7 @@ folderPathMargeFiles = 'hdfs://Cnt7-naya-cdh63:8020/user/naya/finalProjectMargeF
 # HIVE details
 hive_port = 10000
 hive_username = 'hdfs'
-hive_password = 'naya'
+hive_password = '************'
 hive_mode = 'CUSTOM'
 hive_db_name = 'AntisemitismDB'
 hive_table_name = 'twitter_data_tbl'
