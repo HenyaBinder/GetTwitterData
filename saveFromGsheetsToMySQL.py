@@ -3,17 +3,18 @@ import configuration as c
 from datetime import datetime, timedelta
 import connectToMySQL as m
 
-yesterday = datetime.now() - timedelta(days=3)  # timedelta(10)
+fromDate = datetime.now() - timedelta(days=10)  # timedelta(10)
+toDate = datetime.now()
 db = m.mySqlHandle()
 wks = gs.connectByName(c.reports_file_name, c.ws_posts)
 
 
 def updateCat():
-    global yesterday
+    global fromDate
     global wks
-    print('yesterday = {}'.format(yesterday))
+    print('fromDate = {}'.format(fromDate))
 
-    gs.categoryUpdate(wks, yesterday)
+    gs.categoryUpdate(wks, fromDate,toDate)
 
 
 def checkExistingRows(date1, date2):
@@ -22,10 +23,10 @@ def checkExistingRows(date1, date2):
 
 
 def insertFromGSToMySQL():
-    global yesterday
+    global fromDate
     global wks
     global db
-    date_str = yesterday.strftime("%d-%m-%Y")
+    date_str = fromDate.strftime("%d-%m-%Y")
     cells = wks.find(pattern=date_str, matchEntireCell=True, cols=[c.gs_date[0], c.gs_date[0]])
     print('count of rows {}'.format(len(cells)))
     if (len(cells) > 0):
@@ -38,6 +39,6 @@ def insertFromGSToMySQL():
 
 
 updateCat()
-checkExistingRows(yesterday.strftime("%d-%m-%Y"), (yesterday + timedelta(days=1)).strftime("%d-%m-%Y"))
+checkExistingRows(fromDate.strftime("%d-%m-%Y"), toDate.strftime("%d-%m-%Y"))
 insertFromGSToMySQL()
 
