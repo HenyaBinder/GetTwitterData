@@ -67,7 +67,14 @@ saveFromGsheetsToMySQL = BashOperator(
     dag=dag
 )
 
- createDependencies >> [saveFromHiveTablesToGCP, updateCategory,saveFromGsheetsToMySQL]
+slackHandler = BashOperator(
+    task_id='createDependencies',
+    # bash_command='python /tmp/pycharm_project_387/createDependencies.py',
+    bash_command='python /tmp/pycharm_project_149/slackHandler.py',
+    dag=dag
+)
+
+createDependencies >> [saveFromHiveTablesToGCP, updateCategory,saveFromGsheetsToMySQL, slackHandler]
 
 #
 # createDependencies >> getTweets
