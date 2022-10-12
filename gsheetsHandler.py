@@ -230,7 +230,7 @@ def categoryUpdate(wks, from_date, to_date):
                 #     logger.logError("tweetID {} was not found in twitterReportsTbl tavle".format(tweetID))
                 #     return
 
-                if (len(results) > 0):
+                if (results and len(results) > 0):
                     data = list(results[0])
 
                     if (data[2] != category):
