@@ -29,11 +29,11 @@ def insertFromGSToMySQL():
     date_str = fromDate.strftime("%d-%m-%Y")
     cells = wks.find(pattern=date_str, matchEntireCell=True, cols=[c.gs_date[0], c.gs_date[0]])
     print('count of rows {}'.format(len(cells)))
-    if (len(cells) > 0):
+    if (cells and len(cells) > 0):
         for cell in cells:
             tweetID = wks.get_value(c.gs_tweet_id[1] + str(cell.row))
             rec = db.selectDataInTweetReportsTbl("tweetID='{}'".format(tweetID))
-            if(len(rec)==0):
+            if(rec and len(rec)==0):
                 gs.copyTweetSheetsToMySQL(wks, tweetID)
                 print('tweetID {} inserted to the DB'.format(tweetID))
 

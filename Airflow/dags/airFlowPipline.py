@@ -68,7 +68,7 @@ saveFromGsheetsToMySQL = BashOperator(
 )
 
 slackHandler = BashOperator(
-    task_id='createDependencies',
+    task_id='slackHandler',
     # bash_command='python /tmp/pycharm_project_387/createDependencies.py',
     bash_command='python /tmp/pycharm_project_149/slackHandler.py',
     dag=dag
