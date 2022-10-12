@@ -217,7 +217,7 @@ def categoryUpdate(wks, from_date, to_date):
 
         cells = wks.find(pattern=date_str, matchEntireCell=True, cols=[c.gs_date[0], c.gs_date[0]])
 
-        if (len(cells) > 0):
+        if (cells and len(cells) > 0):
 
             for cell in cells:
                 tweetID = wks.get_value(c.gs_tweet_id[1] + str(cell.row))
