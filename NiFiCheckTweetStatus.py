@@ -15,10 +15,9 @@
 ##      Y - Tweet was deleted
 ##      N - Tweet was not deleted
 
-
 import sys
 import tweepy as tw
-from tweepy import Stream
+#from tweepy import Stream
 from tweepy import OAuthHandler
 
 
