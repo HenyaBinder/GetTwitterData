@@ -26,7 +26,7 @@ def insertFromGSToMySQL():
     global fromDate
     global wks
     global db
-    date_str = fromDate.strftime("%d-%m-%Y")
+    date_str = toDate.strftime("%d-%m-%Y")
     cells = wks.find(pattern=date_str, matchEntireCell=True, cols=[c.gs_date[0], c.gs_date[0]])
     print('count of rows {}'.format(len(cells)))
     if (cells and len(cells) > 0):
