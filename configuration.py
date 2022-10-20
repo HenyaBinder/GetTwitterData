@@ -103,3 +103,11 @@ gs_keywords_or_hashtags = (18, "R", 17)
 slack_sch_msg_url = "https://hooks.slack.com/services/***********/***********/***********************"
 slack_ah_msg_url = "https://hooks.slack.com/services/***********/***********/***********************"
 
+##########################################
+####            parameters      ##########
+##########################################
+
+removedTweetsMail = 'removedTweetsMail'
+newTweetsMail = 'newTweetsMail'
+removedTweetsProcess = 'removedTweetsProcess'
+cleanLogTable ='cleanLogTable'

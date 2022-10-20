@@ -26,7 +26,7 @@ dag = DAG(
 createDependencies = BashOperator(
     task_id='createDependencies',
     # bash_command='python /tmp/pycharm_project_387/createDependencies.py',
-    bash_command='python /tmp/pycharm_project_149/createDependencies.py',
+    bash_command='python /tmp/pycharm_project_97/createDependencies.py',
     dag=dag
 )
 #
@@ -51,26 +51,26 @@ createDependencies = BashOperator(
 
 saveFromHiveTablesToGCP = BashOperator(
     task_id='saveFromHiveTablesToGCP',
-    bash_command='python /tmp/pycharm_project_149/buildHiveTablesAndSaveToGCP.py',
+    bash_command='python /tmp/pycharm_project_97/buildHiveTablesAndSaveToGCP.py',
     dag=dag
 )
 
 updateCategory = BashOperator(
     task_id='updateCategory',
-    bash_command='python /tmp/pycharm_project_149/saveFromGsheetsToMySQL.py',
+    bash_command='python /tmp/pycharm_project_97/saveFromGsheetsToMySQL.py',
     dag=dag
 )
 
 saveFromGsheetsToMySQL = BashOperator(
     task_id='saveFromGsheetsToMySQL',
-    bash_command='python /tmp/pycharm_project_149/saveFromGsheetsToMySQL.py',
+    bash_command='python /tmp/pycharm_project_97/saveFromGsheetsToMySQL.py',
     dag=dag
 )
 
 slackHandler = BashOperator(
     task_id='slackHandler',
     # bash_command='python /tmp/pycharm_project_387/createDependencies.py',
-    bash_command='python /tmp/pycharm_project_149/slackHandler.py',
+    bash_command='python /tmp/pycharm_project_97/slackHandler.py',
     dag=dag
 )
 
